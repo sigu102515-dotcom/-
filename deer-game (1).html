@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>相愛沒有那麼茸易｜鹿場經營遊戲</title>
+<style>
+:root{--bg:#f4efe2;--ink:#1f2a22;--green:#1f3a2c;--wine:#6b1e2b;--line:#1f2a2255;--mute:#5a6258;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16201a;--ink:#efe8d6;--green:#a9c4ac;--wine:#e08a97;--line:#efe8d655;--mute:#b5b9a8}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.8 "Noto Serif TC","Songti TC","PMingLiU",serif;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence baseFrequency='.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 .4 0 0 0 0 .35 0 0 0 0 .3 0 0 0 .07 0'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>")}
+main{max-width:880px;margin:0 auto;padding:20px 20px 60px}
+h1,h2,h3{font-weight:900;line-height:1.25;margin:0}
+.kicker{font:700 13px/1.4 system-ui,sans-serif;letter-spacing:.25em;color:var(--wine);text-transform:uppercase}
+.rule{border:0;border-top:2px solid var(--ink);margin:18px 0}.thin{border-top:1px solid var(--line)}
+.hero h1{font-size:clamp(44px,12vw,104px);color:var(--green);letter-spacing:.02em;margin:14px 0 6px}
+.hero h2{font-size:clamp(20px,4.5vw,30px);color:var(--wine);font-weight:600}
+.btn{display:block;width:100%;min-height:56px;padding:14px 18px;margin:12px 0;font:inherit;font-weight:700;text-align:left;color:var(--ink);background:transparent;border:1.5px solid var(--ink);border-radius:0;cursor:pointer}
+.btn:hover,.btn:focus-visible{background:var(--ink);color:var(--bg);outline:none}
+.btn.go{background:var(--green);color:var(--bg);text-align:center;border-color:var(--green)}
+.btn.go:hover{background:var(--wine);border-color:var(--wine);color:#fff}
+.btn small{display:block;font-weight:400;opacity:.8}
+.btn .k{font-family:system-ui,sans-serif;color:var(--wine);margin-right:8px}
+.btn:hover .k{color:inherit}
+.top{display:flex;justify-content:space-between;align-items:baseline;font:600 14px system-ui,sans-serif;gap:10px}
+.prog{display:flex;gap:4px;margin:8px 0}.prog i{flex:1;height:5px;background:var(--line)}.prog i.on{background:var(--wine)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:6px 18px;font:600 14px system-ui,sans-serif;margin:8px 0 4px}
+.stat .bar{height:6px;border:1px solid var(--ink);margin-top:3px}.stat .bar b{display:block;height:100%;background:var(--green)}
+.stat .d{color:var(--wine)}
+.scene{font-size:clamp(22px,4.5vw,30px);margin:18px 0 8px;color:var(--green)}
+.tag{display:inline-block;border:1px solid var(--wine);color:var(--wine);padding:0 10px;font:700 13px/1.8 system-ui,sans-serif;margin-right:6px}
+.note{border-left:4px solid var(--wine);padding:2px 0 2px 14px;margin:18px 0;font-size:16px;color:var(--mute)}
+.know{background:var(--green);color:var(--bg);padding:16px 18px;margin:18px 0}
+.know b{display:block;font:700 13px system-ui,sans-serif;letter-spacing:.2em;margin-bottom:4px}
+.fine{font-size:14px;color:var(--mute)}
+.deltas{display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;font:700 15px system-ui,sans-serif}
+.cols{display:grid;gap:22px}@media(min-width:760px){.cols{grid-template-columns:1fr 1fr}}
+textarea{width:100%;min-height:90px;font:inherit;padding:10px;background:transparent;color:var(--ink);border:1.5px solid var(--ink);border-radius:0}
+label.opt{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer}
+label.opt input{width:24px;height:24px;margin-top:5px;accent-color:var(--wine);flex:none}
+svg.art{width:100%;max-width:420px;display:block;margin:10px auto;color:var(--green)}
+a{color:var(--wine)}.link{background:none;border:0;font:inherit;font-size:14px;text-decoration:underline;color:var(--mute);cursor:pointer;padding:8px 0}
+</style></head><body><main id="app"></main>
+<script>
+const S={funds:"經營資金",care:"鹿隻照護",qual:"生產與品質管理",trust:"消費者信任"},K=Object.keys(S);
+const EV=[
+{t:"第一週・接手鹿場",s:"前任鹿農把鑰匙與一疊紀錄本交給你，鹿群在晨霧裡抬頭看你。你想先從哪裡開始？",
+ o:[{x:"先跟著老鹿農巡場，建立鹿群個體紀錄",d:[-3,6,6,3],r:"你花了一週觀察採食、行走與長茸狀況，並開始記錄每隻鹿。短期沒有收入，但後面每個決定都有依據。"},
+    {x:"立刻擴大鹿群，增加產量",d:[-12,-6,0,0],r:"新增的鹿需要更多草料、空間與照顧人力，場內管理開始吃緊，資金也快速流出。"},
+    {x:"先四處拜訪通路，確認誰會收茸",d:[-4,0,0,3],m:1,r:"你認識了幾位可能的合作對象，但對自家鹿群的狀況仍不夠熟悉。"}],
+ k:"鹿茸是公鹿頭上「生長中」的角，外覆絨毛皮膚、富含血液供應；之後會逐漸骨化，成為堅硬的鹿角。兩者不是同一種東西。個體紀錄與種鹿系譜，也是畜產試驗所輔導產業選育的重要基礎。"},
+{t:"第二季・飼料與成本",s:"草料價格波動，帳本上的數字讓你皺眉。鹿群每天都要吃，你要怎麼安排？",
+ o:[{x:"與草農簽約，契作穩定品質的牧草",d:[-6,6,6,0],r:"每月支出較高，但草料品質與供應比較穩定，鹿群狀況也更好掌握。"},
+    {x:"一律改買最便宜的飼料",d:[8,-8,-6,0],r:"帳面暫時好看，但營養與採食狀況不穩，鹿隻與茸的品質都受到影響。"},
+    {x:"小規模試驗不同配方，並逐項記錄結果",d:[-4,3,4,0],r:"你把成本、採食與生長狀況一起記下，慢慢找到適合自己鹿場的搭配。"}],
+ k:"降低飼養成本、提升鹿茸產量是產業長期的課題。農業政府資料提到過牧草分級、與草農契作等方向。成本要降，但不能靠犧牲營養與照護。"},
+{t:"夏末・鹿隻異常",s:"巡場時，有一隻鹿食慾下降、行動遲緩，離群站在角落。",
+ o:[{x:"隔離觀察、詳細記錄，並請獸醫診斷",d:[-6,10,2,2],r:"獸醫協助釐清原因，你也學到哪些徵兆要及早通報。花了一筆診療費，但問題被及早處理。"},
+    {x:"先照網路偏方處理，等兩週再看看",d:[4,-12,-4,-4],r:"省了眼前的錢，但拖延讓狀況惡化，也可能影響整個鹿群。這是遊戲裡最需要避免的選擇。"},
+    {x:"獸醫診斷後，再全面檢視鹿群衛生與防疫",d:[-12,12,6,4],r:"花費最高，但你同時補強了衛生管理與檢查流程，鹿群與日後的產品都更有保障。"}],
+ k:"鹿隻出現異常，應優先觀察、隔離並尋求獸醫或專業人員協助，不應自行判斷或用藥。官方資料也指出，加強鹿隻結核病檢查與預防，有助確保國產鹿茸的品質與衛生安全。"},
+{t:"茸期・採收決定",s:"今年的茸長得漂亮，買家也在詢問。採收前，你要怎麼準備？",
+ o:[{x:"依專業人員指導與動物福利規範，安排訓練過的人員與流程",d:[-8,6,8,4],r:"準備時間較長，但鹿隻壓力較低、紀錄完整，採收品質也更穩定。"},
+    {x:"趕訂單，省略準備與確認步驟",d:[6,-8,-8,-3],r:"短期趕上了交期，但鹿隻承受不必要的壓力，品質與紀錄也出現落差。"},
+    {x:"延後一批，請教專家與同業改善流程",d:[-4,4,5,2],r:"你損失一部分時效，但學到更適合場內的做法。"}],
+ k:"鹿茸採收涉及動物福利與專業操作，本遊戲不示範操作步驟。農業政府資料曾提及研發更人道的採收技術，以提升產業形象。實際作業請依專業規範與主管機關要求。"},
+{t:"秋季・加工與通路",s:"鹿茸收下來了，你要怎麼把它變成消費者看得懂、買得安心的產品？",
+ o:[{x:"依不同產品分別評估加工方式，並清楚標示內容與保存方式",d:[-7,0,6,6],m:1,r:"你理解到不同產品的處理與保存並不相同，資訊清楚，消費者較能理解。"},
+    {x:"所有產品套用同一套做法與說明",d:[5,0,-6,-4],r:"流程簡單，但不同產品的特性被忽略，標示也不夠精確。"},
+    {x:"與在地通路合作，推廣鮮茸與產地故事",d:[-3,0,2,6],m:1,r:"消費者能看見產地與生產者，產生信任，但通路經營也需要時間。"}],
+ k:"鹿茸有鮮茸、乾燥品與各式加工產品等多種形式，不同產品加工方式與保存條件並不一樣。業界與畜試所也在開發多元化的加工產品，讓消費族群更廣。"},
+{t:"年末・市場與信任",s:"進口鹿茸價格較低，網路上也有人用誇大宣傳搶客。你的店要怎麼說話？",
+ o:[{x:"在文案寫「保證治病」，快速吸引買家",d:[10,0,0,-14],r:"短期詢問增加，但缺乏可靠證據的宣稱，會傷害消費者信任，也可能有法規風險。"},
+    {x:"誠實說明：鹿茸與骨化鹿角不同，研究仍在累積，不宣稱療效，並公開產地與生產紀錄",d:[-2,0,3,10],r:"成交速度不一定最快，但消費者看得懂也信得過。"},
+    {x:"直接降價，跟進口產品拚價格",d:[6,-4,-5,-4],r:"銷量暫時回升，但利潤變薄，壓縮照護與品質的空間。"}],
+ k:"依臺紐經濟合作協定，2025 年起紐西蘭鹿茸零關稅進口，國內產業面臨價格競爭。業界與政府的因應方向包括品牌、產地認證與開拓市場。目前相關研究只是在持續累積，鹿茸不應被宣傳為治病用途。"}];
+const END={
+reset:{n:"需要重新調整經營策略",c:"某些面向已經亮起紅燈。",b:"這是學習的起點：回頭看看是哪個環節被忽略，例如資金、照護、品質或信任。鹿場經營靠整體平衡，不是單一指標。"},
+quality:{n:"重視品質與信任的鹿場",c:"你選擇慢慢來，把品質與信任放在前面。",b:"你重視紀錄、照護與誠實標示，在價格競爭下靠品質與信任站穩腳步。代價是資金需要更精打細算。"},
+market:{n:"市場開發型鹿場",c:"你把握機會，開拓了通路與產品。",b:"你多次選擇開發產品或通路，也維持了基本的信任與資金。市場的機會來自於清楚的產品資訊與對消費者的誠信。"},
+stable:{n:"穩定經營的鹿場",c:"各面向大致平衡，沒有明顯短板。",b:"你在成本、照護與市場之間取得了平衡。接下來可以思考：要在哪個方向再往前一步？"}};
+const REF=[["農業部畜產試驗所／食力 foodnext：臺紐經濟合作協定與養鹿產業因應","https://www.foodnext.net/science/technology/paper/5357997798"],["農業部：鹿茸產業政策與因應（moa.gov.tw）","https://www.moa.gov.tw/ws.php?id=1004"],["公視新聞：開放紐西蘭鹿茸零關稅進口","https://news.pts.org.tw/article/713519"],["農業知識庫（畜產試驗所）：高產茸鹿評選","https://agrkb.angrin.tlri.gov.tw/modules/smartsection/makepdf.php?itemid=765"]];
+let g,fb=[],$=document.getElementById("app");
+const reset=()=>g={sc:"home",i:0,st:{funds:75,care:60,qual:50,trust:50},log:[],mk:0,last:null,lock:false,f:{}};reset();
+const bar=()=>`<div class="stats">${K.map(k=>`<div class="stat">${S[k]} <b>${g.st[k]}</b>${g.last?` <span class="d">${fmt(g.last.dd[k])}</span>`:""}<div class="bar"><b style="width:${g.st[k]}%"></b></div></div>`).join("")}</div>`;
+const fmt=v=>v>0?`▲+${v}`:v<0?`▼${v}`:"－0";
+const antler=c=>`<svg class="art" viewBox="0 0 200 160" role="img" aria-label="鹿茸與鹿角線條示意圖（非真實照片）" fill="none" stroke="currentColor" stroke-width="2"><path d="M100 150V90M100 90C80 80 62 60 50 20M100 90C120 80 138 60 150 20M76 70C60 66 48 54 42 44M124 70C140 66 152 54 158 44M66 52C56 50 48 40 46 30M134 52C144 50 152 40 154 30"/><circle cx="100" cy="150" r="3" fill="currentColor"/><text x="100" y="159" font-size="7" text-anchor="middle" fill="currentColor" stroke="none">示意圖｜非真實照片</text></svg>`;
+function ending(){const s=g.st,v=K.map(k=>s[k]);if(s.funds<=15||Math.min(...v)<=25||v.filter(x=>x<35).length>=2)return"reset";if(s.qual+s.trust>=125&&s.care>=55)return"quality";if(g.mk>=2&&s.funds>=35&&s.trust>=50)return"market";return"stable"}
+function choose(i){if(g.lock||g.sc!=="ev")return;g.lock=true;const o=EV[g.i].o[i],dd={};K.forEach((k,j)=>{const n=Math.max(0,Math.min(100,g.st[k]+o.d[j]));dd[k]=n-g.st[k];g.st[k]=n});if(o.m)g.mk++;g.last={o,dd,e:EV[g.i]};g.log.push({e:EV[g.i].t,x:o.x,w:o.d.reduce((a,b)=>a+Math.abs(b),0),r:o.r});g.sc="fb";g.lock=false;render()}
+function next(){if(g.sc!=="fb")return;g.last=null;g.i++;g.sc=g.i>=EV.length?"end":"ev";render();scrollTo(0,0)}
+function go(s){g.sc=s;render();scrollTo(0,0)}
+function head(){return`<div class="top"><span>相愛沒有那麼茸易</span><span>事件 ${Math.min(g.i+1,EV.length)}／${EV.length}</span></div><div class="prog">${EV.map((_,j)=>`<i class="${j<g.i||(g.sc==="fb"&&j===g.i)?"on":""}"></i>`).join("")}</div>`}
+function render(){let h="";const sc=g.sc;
+if(sc==="home")h=`<div class="hero"><div class="kicker">農業傳播展｜互動鹿場日誌</div><hr class="rule"><h1>相愛沒有<br>那麼茸易</h1><h2>但認識鹿茸，可以很容易。</h2><hr class="rule thin"><p>一座鹿場、一本紀錄本與一群看著你的鹿。你將做出一連串經營決定，看看台灣養鹿產業的取捨。</p><button class="btn go" onclick="go('intro')">開始經營</button><button class="link" onclick="go('refs')">知識說明與參考資料</button></div>`;
+else if(sc==="intro")h=`<div class="kicker">角色與任務</div><h2 class="scene">你是剛接手鹿場的新手養鹿人</h2><p>接下來約有十二個事件，還可能遇到隱藏事件。你前面的選擇會影響後面發生的事。每次選擇都有好處，也有代價。沒有永遠最好的答案。</p><div class="cols"><div>${K.map(k=>`<p><b>${S[k]}</b><br><span class="fine">${{funds:"撐起日常開銷與投資。",care:"鹿隻的健康與福利。",qual:"飼養、採收與加工的紀錄與品質。",trust:"消費者與通路對你的信賴。"}[k]}</span></p>`).join("")}</div><div class="note">數值與結局都是遊戲設計用的模擬，<b>不是真實產業統計</b>。遊戲情境是虛構的；知識說明才是現實資訊。</div></div><button class="btn go" onclick="go('ev')">走進鹿場</button>`;
+else if(sc==="ev"){const e=EV[g.i];h=head()+bar()+`<hr class="rule thin"><div class="kicker">${e.t}</div><h2 class="scene">${e.s}</h2>${e.o.map((o,j)=>`<button class="btn" onclick="choose(${j})"><span class="k">${"ABC"[j]}</span>${o.x}</button>`).join("")}`}
+else if(sc==="fb"){const l=g.last;h=head()+bar()+`<hr class="rule thin"><div class="kicker">你選擇了</div><h2 class="scene">${l.o.x}</h2><p>${l.o.r}</p><div class="know"><b>產業知識</b>${l.e.k}</div><button class="btn go" onclick="next()">${g.i>=EV.length-1?"看結局":"繼續經營"}</button>`}
+else if(sc==="end"){const k=ending(),E=END[k],top=[...g.log].sort((a,b)=>b.w-a.w)[0];h=`<div class="kicker">結局</div><hr class="rule"><h1 style="color:var(--wine);font-size:clamp(30px,8vw,56px)">${E.n}</h1><p>${E.c}</p>${antler()}${bar()}<div class="cols"><div><h3>為什麼是這個結局</h3><p>${E.b}</p><p class="fine">本結局依整趟旅程累積的四項指標與選擇傾向判定，而非只看最後一題。</p></div><div><h3>最關鍵的決策</h3><p>「${top.e}」：${top.x}。<br><span class="fine">${top.r}</span></p></div></div><div class="know"><b>帶走的知識</b>鹿茸是生長中的角，與已骨化的鹿角不同；不同產品加工方式也不同；鹿隻異常應尋求獸醫協助；誠實的資訊與紀錄，是建立信任的基礎。鹿茸研究持續累積中，不應宣稱未經證實的療效。</div><button class="btn go" onclick="go('fbk')">留下參觀回饋</button><button class="btn" onclick="reset();go('home')">再玩一次</button>`}
+else if(sc==="fbk"){h=`<div class="kicker">參觀後回饋</div><h2 class="scene">玩完遊戲後，你對台灣養鹿產業有什麼新的認識？</h2>${["鹿茸與鹿角不同","不同產品加工方式不同","鹿隻照護與獸醫很重要","誠實的標示能建立信任","養鹿產業面臨進口競爭"].map((t,j)=>`<label class="opt"><input type="checkbox" name="c" value="${t}"><span>${t}</span></label>`).join("")}<p><textarea id="tx" maxlength="300" placeholder="也可以寫下你的想法（選填，請勿填寫個人資料）"></textarea></p><div class="note">本頁沒有後端伺服器，回饋<b>僅暫存在本次瀏覽器頁面</b>，關閉或重新整理後消失，不會傳送給展覽主辦者。</div><button class="btn go" onclick="sub()">提交（僅本機）</button><button class="btn" onclick="go('end')">返回結局</button>${fb.length?`<h3>本次工作階段的回饋</h3>${fb.map(f=>`<p class="fine">• ${f}</p>`).join("")}`:""}`}
+else if(sc==="refs"){h=`<div class="kicker">知識說明與參考資料</div><h2 class="scene">真實事實 vs 遊戲情境</h2><p>鹿茸為生長中的角，與骨化鹿角不同。遊戲中的事件、數值與結局為模擬設計。本頁未引用產業規模、價格或法規的具體數字。</p><p class="fine">採收操作、動物福利與法規請以主管機關及專業人員的規範為準。研究結果不等於醫療宣稱。</p><h3>參考資料</h3>${REF.map(r=>`<p><a href="${r[1]}" target="_blank" rel="noopener">${r[0]}</a></p>`).join("")}<button class="btn go" onclick="go('home')">回首頁</button>`}
+$.innerHTML=h}
+function sub(){const c=[...document.querySelectorAll('input[name=c]:checked')].map(x=>x.value),t=document.getElementById("tx").value.trim().replace(/[<>&]/g,"");if(!c.length&&!t)return;fb.push([...c,t].filter(Boolean).join("；"));render()}
+render();
+
+const FL={rec:"完整的生產紀錄",vet:"尋求獸醫協助",honest:"透明溝通",buzz:"大量曝光",alone:"獨自攬事",expert:"外部專業協助",prod:"清楚的產品資訊",story:"產地故事",delay:"延誤處理",team:"分工",edu:"知識導覽",crisisOk:"危機處理",burnout:"硬撐"};
+const O=(x,d,r,f,b,m)=>({x,d,r,f,b,m});
+const [E1,E2,E3,E4,E5,E6]=EV.slice();
+E1.o[0].f="rec";E1.o[1].f="expand";E2.o[0].f="contract";E2.o[1].f="cheap";E2.o[2].f="trial";
+E3.o[0].f="vet";E3.o[0].b={expert:[3,0,0,2]};E3.o[1].f="delay";E3.o[2].f="vet";
+E4.o[0].f="prep";E4.o[0].b={rec:[0,0,2,2]};E5.o[0].f="prod";E5.o[1].f="sameway";
+E6.o[0].f="hype";E6.o[1].f="honest";E6.o[1].b={rec:[0,0,2,3],prod:[0,0,0,2]};E6.o[2].f="price";E6.o[2].b={contract:[3,0,0,0]};
+const T={t:"忙碌的一週",s:"採收季、客人詢問、鹿群巡查與帳本，全擠在同一週。你只有一個人，要怎麼排優先順序？",o:[
+O("全部自己來，晚點睡就好",[4,-2,-2,0],"人事費省下了，但行程越排越滿，漏掉的細節開始累積。","alone"),
+O("找人分工，訂出巡場與紀錄班表",[-6,4,4,0],"多了人事支出，但巡場與紀錄更穩定，你也有空做決策。","team"),
+O("請合作社或顧問協助盤點，自己專注關鍵決策",[-7,3,5,2],"外部專業讓你少走彎路，之後遇到複雜問題也多一個求助對象。","expert")],
+k:"畜產試驗所與養鹿協會等單位，長期輔導產業在選育、飼養與行銷上提升效率。外部資源是小型鹿場的選項之一（參考資料見知識頁）。"};
+const CH={t:"通路選擇",s:"產品準備好了。你要怎麼把它送到消費者手上？",o:[
+O("自家直接銷售：預約、市集、到場說明",[-3,0,1,5],"能面對面說明，但產量與時間有限，也需要自己處理客服。","direct",{rec:[0,0,0,3]},1),
+O("與既有盤商或中藥行合作",[5,0,0,-2],"通路穩定、客群現成，但價格與說明較難自己掌握。","wholesale",{prod:[0,0,0,3]}),
+O("嘗試網路與聯名等新通路",[-6,0,0,3],"曝光變多，但需要處理出貨、客服與產品資訊的一致性。","online",{"!prod":[0,0,-4,-4]},1)],
+k:"鹿茸有不同的產品形式與通路。農業政府資料曾提及協助建立品牌與認證，以區隔國產與進口產品。實際通路選擇要看自身產能與產品資訊是否準備完整。"};
+const BR={t:"行銷與品牌",s:"要讓更多人認識你的鹿場。文案、影片與合作邀約同時出現。",o:[
+O("大量投放廣告、找網紅合作，衝曝光",[-9,0,0,6],"關注度上升，但你說的每一句話也會被放大檢視。","buzz",null,1),
+O("用產地、紀錄與鹿隻日常說故事",[-4,0,2,6],"內容較慢熱，但經得起追問。","story",{rec:[0,0,0,3]},1),
+O("低調經營，先把產品資訊與包裝做清楚",[-3,0,4,2],"曝光有限，但基礎扎實，之後做行銷更有底氣。","steady")],
+k:"介紹鹿茸時，可說明它是生長中的角、與骨化鹿角不同，以及不同產品的差異。對療效的說法應以可靠研究為依據，不宜誇大。"};
+const Q={t:"消費者提出質疑",s:"有顧客留言：「這個茸從哪來？怎麼做的？有沒有紀錄？」留言正在被轉發。",o:[
+O("公開回覆，附上產地與生產資訊，歡迎追問",[-2,0,2,6],"有紀錄時，說明就有憑據。沒有紀錄時，你只能憑記憶回答。","honest",{rec:[0,0,2,5],"!rec":[0,0,-3,-5]}),
+O("私訊簡短回覆，不公開回應",[0,0,0,-2],"事情暫時平息，但旁觀者沒有看到答案。",null,{rec:[0,0,0,2]}),
+O("請獸醫或專業人員協助確認，再公開說明",[-5,2,3,5],"回覆晚了一點，但內容有專業背書。","honest,expert",{expert:[2,0,2,2]})],
+k:"消費者想知道產地、生產與處理過程是合理的。農業政府資料提到過國產鹿茸的品牌、認證與衛生安全，都是建立信心的方向。"};
+const CR={t:"突發危機",s:"通路臨時改約，同時有人指出你提供的資訊與紀錄對不上。事情一起來了。",o:[
+O("自己熬夜補資料、逐一聯絡",[-2,-2,2,0],"你撐過了第一晚，但體力與判斷力都在下滑。","stay",{alone:[0,-4,-3,-2]}),
+O("調出紀錄，與通路及專業人員一起處理",[-6,0,4,6],"有紀錄與夥伴時，危機可以被拆解處理。","crisisOk",{rec:[3,0,3,3],expert:[2,0,0,3],"!rec":[-4,0,-6,-6]}),
+O("暫停部分銷售，先補齊資訊再恢復",[-8,0,5,4],"短期收入受影響，但避免了錯誤資訊持續流出。","pause",{rec:[2,0,1,1]})],
+k:"紀錄不完整時，要說明產品來源會很困難。可追溯的紀錄是品質管理的基礎。"};
+const H1={hid:1,w:g=>g.f.alone&&!g.f.team,t:"隱藏事件・累了",s:"連續工作多天，你開始忘記按時吃飯。鹿場是你的，但你也是。",o:[
+O("硬撐到這季結束",[2,-3,-3,0],"帳面撐住了，但你的判斷開始出現失誤。","burnout"),
+O("找人分擔，把工作拆開",[-5,3,2,0],"多了開銷，但事情開始有人接。","team"),
+O("休息一天，列出優先順序再動手",[-2,2,2,0],"你放慢腳步，反而更清楚該做什麼。")],
+k:"小型農場的人力與時間有限，把工作拆分、訂優先順序與尋求外部資源，是經營中重要的一環。"};
+const H2={hid:1,w:g=>g.f.expert&&g.f.rec&&!g.f.alone,t:"隱藏事件・學校來訪",s:"一所學校邀請你向學生介紹鹿場。你要怎麼把鹿茸講給一般人聽？",o:[
+O("用生活化的比喻，區分鹿茸與鹿角，也說明研究不等於療效",[-3,0,2,7],"學生聽懂了，也記住了你的鹿場。","edu"),
+O("發放商品傳單，順便推廣",[3,0,0,1],"有些銷售機會，但沒人記得你說了什麼。"),
+O("婉拒，專心處理場務",[0,0,0,0],"省了時間，也錯過了一次溝通的機會。")],
+k:"農業傳播的重點是把專業知識轉成一般人聽得懂的語言，並清楚區分事實、研究與行銷說法。"};
+const FIN={t:"最終決策",s:"展覽結束前，有記者問：你的鹿場，最想被記得什麼？",o:[
+O("品質與紀錄：每一支都有跡可循",[-4,0,6,3],"你把方向放在可追溯與穩定的品質上。","c_q"),
+O("品牌與市場：讓更多人認識鹿茸",[-2,0,0,6],"你把方向放在溝通與開拓上。","c_m",null,1),
+O("照護與永續：鹿與人都能長久經營",[-4,6,0,3],"你把方向放在長期照護與可持續經營上。","c_c")],
+k:"鹿茸產業同時有動物照護、品質、成本與市場的考量，沒有單一策略能解決所有問題，這也是經營上最難的取捨。"};
+EV.splice(0,EV.length,E1,E2,T,E3,E4,E5,CH,BR,Q,CR,H1,H2,E6,FIN);
+Object.assign(END,{
+reset:{n:"需要重新調整經營策略",c:"鹿場的帳本和鹿群都在提醒你：是時候慢下來盤點。",b:"至少有一項指標跌到危險範圍，單一面向的失衡會拖累整體。",f:"鹿場經營要同時顧到成本、照護、品質與信任。",sh:"重新整理，也是經營的一部分。"},
+philo:{n:"恭喜，你解鎖了鹿生哲學",c:"你不是分數最高的人，卻在每個關鍵點都選了同一種答案：誠實、照護，並且願意學。",b:"（隱藏）你尋求專業協助、透明溝通、未誇大宣傳，也願意學習，且沒有任何指標崩壞。",f:"可靠的資訊與一致的做法，會比短期的爆點更耐久。",sh:"鹿生哲學：慢一點，但是誠實。"},
+burn:{n:"鹿場還沒倒，我先累了",c:"帳本沒出事，鹿群也還好，倒是你自己快撐不住了。",b:"你把大多數事情攬在自己身上，並在疲憊時選擇硬撐。",f:"小型農場的人力有限，分工與外部資源是經營的一部分。",sh:"先照顧好自己，才能照顧好鹿場。"},
+norec:{n:"資料消失術大師",c:"客人問起來源時，你才發現紀錄少了一大截。",b:"你沒有建立完整的生產紀錄，品質與資訊都缺乏憑據。",f:"可追溯的紀錄是品質管理與消費者信任的基礎。",sh:"紀錄不是負擔，是你的底氣。"},
+buzz:{n:"流量很高，資料在哪？",c:"你的鹿場上了不少熱門貼文，但追問的人也越來越多。",b:"行銷衝在品質與資訊準備的前面。",f:"品牌承諾需要品質管理與清楚的資訊來支撐。",sh:"流量是入口，信任才是回頭客。"},
+poor:{n:"口碑很好，帳本很難看",c:"顧客都說你好，但月底你還是在算錢。",b:"消費者信任很高，但資金吃緊。",f:"信任需要被轉化為穩定的營運，才能持續。",sh:"好口碑也要有好現金流。"},
+talent:{n:"專業很強，只是沒人知道",c:"你的鹿養得好、品質也穩，只是知道的人不多。",b:"照護與品質都很高，但市場溝通較少。",f:"專業實力需要被看見，農業傳播是其中一環。",sh:"好東西，也要有人說得出口。"},
+care:{n:"鹿鹿優先協會會長",c:"在你的鹿場，鹿永遠先吃飽。",b:"你把動物照護放在核心，但資源相對吃緊。",f:"動物福利與經營永續需要同時被兼顧。",sh:"照護不是成本，是基礎。"},
+acct:{n:"省錢省到變會計師",c:"每筆支出你都算得清清楚楚，只是有些該花的地方也被省掉了。",b:"資金很充裕，但照護或品質的投入偏低。",f:"控制成本與必要投入之間，需要被重新檢視。",sh:"省錢可以，必要的投入別省。"},
+fire:{n:"鹿場救火隊長",c:"危機來時，你知道該找誰、翻哪本紀錄。",b:"你善用紀錄與外部專業，成功處理了突發危機。",f:"紀錄與外部合作資源，是應對風險的底氣。",sh:"臨危不亂，因為早有準備。"},
+know:{n:"全村最懂鹿的人",c:"孩子們指著你說：那就是講鹿茸講得最清楚的人。",b:"你透明溝通，並做了知識導覽，也累積了信任。",f:"把專業知識轉成一般人聽得懂的語言，是農業傳播的關鍵。",sh:"講清楚，就是最好的行銷。"},
+mkt:{n:"行銷鬼才，鹿場變品牌",c:"你的鹿場有了名字，也有了故事。",b:"你多次開發市場與通路，品質與信任也跟得上。",f:"品牌需要品質與資訊撐住，才站得穩。",sh:"品牌是承諾，不是口號。"},
+qc:{n:"鹿茸界的品質控",c:"你的紀錄本厚得像一本書，每一支茸都有出處。",b:"生產與品質管理相當突出，照護也維持得不錯。",f:"品質與可追溯性是產品信任的基礎。",sh:"品質，是最安靜的行銷。"},
+win:{n:"鹿場人生勝利組",c:"資金、照護、品質與信任，各項都撐得住。",b:"四項指標相對均衡，沒有明顯短板。",f:"持續經營靠的是整體平衡，而不是單一強項。",sh:"平衡，就是最難的功夫。"},
+stable:{n:"穩定經營的鹿場",c:"你走過了一年，也看見了還能再進步的地方。",b:"各項指標不上不下，沒有明顯強項或崩壞。",f:"每一個決定都有取捨，沒有永遠最好的策略。",sh:"下次，換一種走法看看。"}});
+const STR={funds:"你守住了經營的本錢，讓鹿場有餘裕應變。",care:"你把鹿隻照護放在前面，健康與福利是最穩的底氣。",qual:"你重視紀錄與品質管理，產品資訊有憑有據。",trust:"你與消費者及通路建立了信任，口碑是你的資產。"};
+const CHL={funds:"資金偏緊，要留意現金流，避免被迫做出勉強的決定。",care:"鹿隻照護需要加強，異常徵兆與專業協助要更早安排。",qual:"生產與品質管理有缺口，紀錄與產品資訊要補齊。",trust:"消費者信任待加強，透明溝通與清楚標示是重點。"};
+function ending(){const s=g.st,f=g.f,v=K.map(k=>s[k]),mn=Math.min(...v);
+if(s.funds<=10||mn<=20)return"reset";
+if(f.honest&&f.vet&&!f.hype&&!f.delay&&(f.expert||f.trial)&&(f.c_q||f.c_c||f.c_m)&&mn>=45&&mn<=70)return"philo";
+if(f.burnout)return"burn";
+if(!f.rec&&s.qual<=45)return"norec";
+if(f.buzz&&s.qual<60)return"buzz";
+if(s.trust>=65&&s.funds<40)return"poor";
+if(s.care>=65&&s.qual>=65&&g.mk<2)return"talent";
+if(s.care>=75&&s.funds<55)return"care";
+if(s.funds>=65&&(f.cheap||s.care<55))return"acct";
+if(f.crisisOk&&(f.rec||f.expert))return"fire";
+if(f.honest&&f.edu&&s.trust>=60)return"know";
+if(g.mk>=3&&s.qual>=60&&s.trust>=60)return"mkt";
+if(s.qual>=70&&s.care>=55)return"qc";
+if(mn>=50)return"win";return"stable"}
+function choose(i){if(g.lock||g.sc!=="ev")return;g.lock=true;const e=EV[g.i],o=e.o[i],d=o.d.slice(),dd={},notes=[];
+for(const k in(o.b||{})){const ng=k[0]==="!",fk=ng?k.slice(1):k;if(!!g.f[fk]!==ng){o.b[k].forEach((v,j)=>d[j]+=v);notes.push((ng?"缺少":"先前有")+FL[fk])}}
+K.forEach((k,j)=>{const n=Math.max(0,Math.min(100,g.st[k]+d[j]));dd[k]=n-g.st[k];g.st[k]=n});
+(o.f||"").split(",").filter(Boolean).forEach(x=>g.f[x]=1);if(o.m)g.mk++;
+g.last={o,dd,e,notes};g.log.push({e:e.t,x:o.x,w:d.reduce((a,b)=>a+Math.abs(b),0),r:o.r});g.sc="fb";g.lock=false;render()}
+function next(){if(g.sc!=="fb")return;g.last=null;g.i++;while(EV[g.i]&&EV[g.i].w&&!EV[g.i].w(g))g.i++;g.sc=g.i>=EV.length?"end":"ev";render();scrollTo(0,0)}
+function head(){const e=EV[g.i]||{},n=EV.slice(0,g.i+1).filter(x=>!x.hid).length;return`<div class="top"><span>相愛沒有那麼茸易</span><span>${e.hid?"隱藏事件":`事件 ${n}／12`}</span></div><div class="prog">${EV.filter(x=>!x.hid).map((_,j)=>`<i class="${j<n-1||(g.sc==="fb"&&j===n-1)?"on":""}"></i>`).join("")}</div>`}
+const R0=render;
+render=function(){const sc=g.sc;if(sc!=="ev"&&sc!=="fb"&&sc!=="end")return R0();let h="";
+if(sc==="ev"){const e=EV[g.i];h=head()+bar()+`<hr class="rule thin"><div class="kicker">${e.t}</div><h2 class="scene">${e.s}</h2>${e.o.map((o,j)=>`<button class="btn" onclick="choose(${j})"><span class="k">${"ABC"[j]}</span>${o.x}</button>`).join("")}`}
+else if(sc==="fb"){const l=g.last;h=head()+bar()+`<hr class="rule thin"><div class="kicker">你選擇了</div><h2 class="scene">${l.o.x}</h2><p>${l.o.r}</p>${l.notes.length?`<p class="note">連鎖影響：${l.notes.join("、")}，改變了這次的結果。</p>`:""}<div class="know"><b>產業知識</b>${l.e.k}</div><button class="btn go" onclick="next()">${EV.slice(g.i+1).some(x=>!x.w||x.w(g))?"繼續經營":"看結局"}</button>`}
+else{const k=ending(),E=END[k],t3=[...g.log].sort((a,b)=>b.w-a.w).slice(0,3),ks=K.slice().sort((a,b)=>g.st[b]-g.st[a]);
+h=`<div class="kicker">我的養鹿人生報告</div><hr class="rule"><h1 style="color:var(--wine);font-size:clamp(30px,8vw,56px)">${E.n}</h1><p>${E.c}</p><p class="scene" style="margin:0">「${E.sh}」</p>${antler()}${bar()}<div class="cols"><div><h3>為什麼是這個結局</h3><p>${E.b}</p><h3>最突出的優勢</h3><p>${STR[ks[0]]}</p><h3>接下來的挑戰</h3><p>${CHL[ks[3]]}</p></div><div><h3>最關鍵的 3 個選擇</h3>${t3.map(x=>`<p>・${x.e}：${x.x}</p>`).join("")}</div></div><div class="know"><b>我學到的一件事</b>${E.f}鹿茸是生長中的角，與已骨化的鹿角不同。</div><p class="fine">結局與數值為遊戲模擬，非真實產業統計。</p><button class="btn go" onclick="go('fbk')">留下參觀回饋</button><button class="btn" onclick="reset();go('home')">再玩一次</button>`}
+$.innerHTML=h};
+
+render();</script></body></html>
